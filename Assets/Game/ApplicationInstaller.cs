@@ -1,4 +1,5 @@
 ﻿using Game.Grid;
+using Game.Player;
 using Zenject;
 
 namespace Game
@@ -8,6 +9,8 @@ namespace Game
         public override void InstallBindings()
         {
             GridInstaller.Install(Container);
+            
+            SnakeInstaller.Install(Container);
             
             Container
                 .Bind<ApplicationLauncher>()
