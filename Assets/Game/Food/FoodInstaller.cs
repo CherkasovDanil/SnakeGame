@@ -13,7 +13,7 @@ namespace Game.Food
             
             Container
                 .BindMemoryPool<Food, Food.Pool>()
-                .WithInitialSize(2)
+                .WithInitialSize(5)
                 .FromComponentInNewPrefabResource("Food")
                 .UnderTransformGroup("Foods");
         }

@@ -10,7 +10,7 @@ namespace Game.Player
         {
             Destroy(gameObject);
         }
-        
+
         public class Factory : PlaceholderFactory<Snake>
         { }
     }

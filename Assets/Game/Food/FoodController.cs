@@ -1,35 +1,40 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
-using Zenject;
+using Random = UnityEngine.Random;
 
 namespace Game.Food
 {
-    public class FoodController : ITickable
+    public class FoodController
     {
         private readonly Food.Pool _pool;
-        readonly List<Food> _foos = new List<Food>();
+        private readonly List<Food> _foods = new List<Food>();
 
         public FoodController(Food.Pool pool)
         { 
             _pool = pool;
+
+            SpawnFood();
         }
 
-        public void Tick()
+        private void SpawnFood()
         {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                Debug.Log("aaaaaa");
-                _foos.Add(_pool.Spawn());
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                Debug.Log("bbbbbbbbb");
-                
-                var foo = _foos[0];
-                _pool.Despawn(foo);
-                _foos.Remove(foo);
-            }
+            var food = _pool.Spawn();
+            food.transform.position = new Vector3(Random.Range(0, 10), Random.Range(0, 8));
+            food.OnTriggerEvent.AddListener(DispawnFood);
+            _foods.Add(food);
+        }
+
+        private void DispawnFood()
+        {
+            var foo = _foods[0];
+            _pool.Despawn(foo);
+            _foods.Remove(foo);
+
+            SpawnFood();
+            
+            
         }
     }
 }
