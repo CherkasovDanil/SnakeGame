@@ -6,7 +6,16 @@ namespace Game.Food
     {
         public override void InstallBindings()
         {
-           
+            Container
+                .BindInterfacesAndSelfTo<FoodController>()
+                .AsSingle()
+                .NonLazy();
+            
+            Container
+                .BindMemoryPool<Food, Food.Pool>()
+                .WithInitialSize(2)
+                .FromComponentInNewPrefabResource("Food")
+                .UnderTransformGroup("Foods");
         }
     }
 }
