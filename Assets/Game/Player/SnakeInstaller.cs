@@ -10,9 +10,14 @@ namespace Game.Player
             Container
                 .BindFactory<Snake, Snake.Factory>()
                 .FromComponentInNewPrefabResource("Player");
+
+            Container
+                .BindInterfacesAndSelfTo<InputController>()
+                .AsSingle()
+                .NonLazy();
            
             Container
-                .BindInterfacesAndSelfTo<SnakeMovement>()
+                .Bind<SnakeMovement>()
                 .AsSingle()
                 .NonLazy();
         }

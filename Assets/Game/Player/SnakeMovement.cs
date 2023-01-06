@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using DG.Tweening;
+using UniRx;
 using UnityEngine;
-using Zenject;
 
 namespace Game.Player
 {
-    public class SnakeMovement : ITickable
+    public class SnakeMovement
     {
         private readonly Snake.Factory _snakeFactory;
         
@@ -16,57 +15,26 @@ namespace Game.Player
         private Vector3 _moveDirectionVector;
         private Vector3 _desirePosition;
 
-        private bool _isMoving;
-        
         public SnakeMovement(Snake.Factory snakeFactory)
         {
+            MessageBroker
+                .Default
+                .Receive<OnChangeDirectionMessage>()
+                .Subscribe(message =>
+                {
+                    _cashedDirection = message.MessageDirection;
+                });
+            
             _snakeFactory = snakeFactory;
 
             _player = _snakeFactory.Create();
+            
             Moving();
         }
 
 
-        public void Tick()
-        {
-            Input();
-        }
-
-
-        private void Input()
-        {
-            if (UnityEngine.Input.GetKeyDown(KeyCode.LeftArrow) && _isMoving == false)
-            {
-                _isMoving = true;
-                
-                _cashedDirection = _cashedDirection switch {
-                    Direction.Left => Direction.Down,
-                    Direction.Up => Direction.Left,
-                    Direction.Right => Direction.Up,
-                    Direction.Down => Direction.Right,
-                    _ => _cashedDirection
-                };
-            }
-
-            if (UnityEngine.Input.GetKeyDown(KeyCode.RightArrow) && _isMoving == false)
-            {
-                _isMoving = true;
-                
-                _cashedDirection = _cashedDirection switch
-                {
-                    Direction.Left => Direction.Up,
-                    Direction.Up => Direction.Right,
-                    Direction.Right => Direction.Down,
-                    Direction.Down => Direction.Left,
-                    _ => _cashedDirection
-                };
-            }
-        }
-
         private void Moving()
         {
-            _isMoving = true;
-
             switch (_cashedDirection)
             {
                 case Direction.Left:
@@ -92,14 +60,15 @@ namespace Game.Player
                 .DOMove(_desirePosition, 0.5f)
                 .SetEase(Ease.Linear)
                 .OnComplete(() =>
-            {
-                _isMoving = false;
-                Moving();
-            });
+                {
+                    Moving();
+                });
             
             _player.transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(_moveDirectionVector) - 90);
 
-            _isMoving = false;
+            MessageBroker
+                .Default
+                .Publish(new OnStartTrackInputMessage(true));
         }
         
         private float GetAngleFromVector(Vector3 dir)
