@@ -26,12 +26,14 @@ namespace Game.Player
     
     public class InputController : ITickable
     {
-        private Direction _cashedDirection;
+       private Direction _cashedDirection;
         
         private bool _trackInput = true;
 
-        public InputController()
+        public InputController(SnakeConfig snakeConfig)
         {
+            _cashedDirection = snakeConfig.StartDirection;
+
             MessageBroker
                 .Default
                 .Receive<OnStartTrackInputMessage>()

@@ -12,6 +12,12 @@ namespace Game.Player
                 .FromComponentInNewPrefabResource("Player");
 
             Container
+                .Bind<SnakeConfig>()
+                .FromScriptableObjectResource("SnakeConfig")
+                .AsSingle()
+                .NonLazy();
+
+                Container
                 .BindInterfacesAndSelfTo<InputController>()
                 .AsSingle()
                 .NonLazy();

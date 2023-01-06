@@ -10,6 +10,7 @@ namespace Game.Player
     {
         private readonly Snake.Factory _snakeFactory;
         private readonly GridConfig _gridConfig;
+        private readonly SnakeConfig _snakeConfig;
 
         private Snake _player;
         private Direction _cashedDirection;
@@ -17,10 +18,17 @@ namespace Game.Player
         private Vector3 _moveDirectionVector;
         private Vector3 _desirePosition;
 
+        private float _playerSpeed;
+
         public SnakeMovement(
             Snake.Factory snakeFactory,
-            GridConfig gridConfig)
+            GridConfig gridConfig,
+            SnakeConfig snakeConfig)
         {
+            _snakeFactory = snakeFactory;
+            _gridConfig = gridConfig;
+            _snakeConfig = snakeConfig;
+            
             MessageBroker
                 .Default
                 .Receive<OnChangeDirectionMessage>()
@@ -28,11 +36,8 @@ namespace Game.Player
                 {
                     _cashedDirection = message.MessageDirection;
                 });
-            
-            _snakeFactory = snakeFactory;
-            _gridConfig = gridConfig;
 
-            _player = _snakeFactory.Create();
+            SetSettings();
             
             Moving();
         }
@@ -63,12 +68,9 @@ namespace Game.Player
             CheckBorder();
 
             _player.transform
-                .DOMove(_desirePosition, 0.5f)
+                .DOMove(_desirePosition, _playerSpeed)
                 .SetEase(Ease.Linear)
-                .OnComplete(() =>
-                {
-                    Moving();
-                });
+                .OnComplete(Moving);
             
             _player.transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(_moveDirectionVector) - 90);
 
@@ -121,6 +123,19 @@ namespace Game.Player
                 
                 _desirePosition.y = _gridConfig.Height - 2;
             }
+        }
+
+        private void SetSettings()
+        {
+            _player = _snakeFactory.Create();
+            
+            _player.transform.position = _snakeConfig.StartPosition;
+            _desirePosition = _snakeConfig.StartPosition;
+            
+            _moveDirection = _snakeConfig.StartDirection;
+            _cashedDirection = _snakeConfig.StartDirection;
+
+            _playerSpeed = _snakeConfig.MoveDuration;
         }
         
         private float GetAngleFromVector(Vector3 dir)
