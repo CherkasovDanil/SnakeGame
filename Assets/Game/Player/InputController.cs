@@ -38,7 +38,7 @@ namespace Game.Player
                 .Subscribe(message =>
                 {
                     _trackInput = message.TrackInput;
-                } );
+                });
         }
 
         public void Tick()
@@ -58,13 +58,7 @@ namespace Game.Player
                     _ => _cashedDirection
                 };
                
-               MessageBroker
-                   .Default
-                   .Publish(new OnStartTrackInputMessage(false));
-               
-               MessageBroker
-                   .Default
-                   .Publish(new OnChangeDirectionMessage(_cashedDirection));
+               BlockMovingAndUpdateDirection();
             }
 
             if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -78,14 +72,19 @@ namespace Game.Player
                     _ => _cashedDirection
                 };
                 
-                MessageBroker
-                    .Default
-                    .Publish(new OnStartTrackInputMessage(false));
-               
-                MessageBroker
-                    .Default
-                    .Publish(new OnChangeDirectionMessage(_cashedDirection));
+                BlockMovingAndUpdateDirection();
             }
+        }
+
+        private void BlockMovingAndUpdateDirection()
+        {
+            MessageBroker
+                .Default
+                .Publish(new OnStartTrackInputMessage(false));
+               
+            MessageBroker
+                .Default
+                .Publish(new OnChangeDirectionMessage(_cashedDirection));
         }
     }
 }
