@@ -16,6 +16,8 @@ namespace Game
             _instantiator.InstantiatePrefabResourceForComponent<EnvironmentSceneObject>("Environment");
             
             _instantiator.InstantiatePrefabResourceForComponent<CameraSceneObject>("Main Camera");
+            
+            OnDone();
         }
     }
 }

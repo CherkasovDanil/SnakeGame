@@ -1,20 +1,22 @@
-﻿namespace Game.Grid
+﻿using Game.Food;
+
+namespace Game.Grid
 {
     public class GridCreateCommand: Command 
     {
-        private readonly GridCell.Pool _pool;
-        private readonly SceneObjectProtocol _protocol;
+        private readonly GridViewProtocol _protocol;
+        private readonly GridFactory _gridFactory;
 
         public GridCreateCommand(
-            GridCell.Pool pool, 
-            SceneObjectProtocol protocol)
+            GridViewProtocol protocol,
+            GridFactory gridFactory)
         {
-            _pool = pool;
             _protocol = protocol;
+            _gridFactory = gridFactory;
         }
         public override void Execute()
         {
-            _pool.Spawn(_protocol);
+            _gridFactory.Create(_protocol);
             OnDone();
         }
     }

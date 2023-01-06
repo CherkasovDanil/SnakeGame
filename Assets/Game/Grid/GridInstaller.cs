@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using Game.Food;
+using Zenject;
 
 namespace Game.Grid
 {
@@ -10,12 +11,12 @@ namespace Game.Grid
                 .Bind<GridConfig>()
                 .FromScriptableObjectResource("GridConfig")
                 .AsSingle();
-            
+
             Container
-                .BindMemoryPool<GridCell, GridCell.Pool>()
+                .BindFactory<GridViewProtocol, GridView, GridFactory>()
                 .FromComponentInNewPrefabResource("GridCell")
                 .UnderTransformGroup("Grid");
-            
+
             Container
                 .Bind<GridController>()
                 .AsSingle()

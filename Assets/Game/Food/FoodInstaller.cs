@@ -6,7 +6,7 @@ namespace Game.Food
     {
         public override void InstallBindings()
         {
-            throw new System.NotImplementedException();
+           
         }
     }
 }

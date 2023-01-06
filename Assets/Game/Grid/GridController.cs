@@ -24,7 +24,7 @@ namespace Game.Grid
             {
                 for (int j = 0; j < _config.Height; j++)
                 {
-                    var protocol = new SceneObjectProtocol(new Vector3(i,j));
+                    var protocol = new GridViewProtocol((i + j) % 2 == 1, new Vector3(i,j));
                     var command = _instantiator.Instantiate<GridCreateCommand>(new object[]{ protocol});
                     command.Execute();
                 }
