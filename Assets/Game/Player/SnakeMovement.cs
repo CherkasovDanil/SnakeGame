@@ -14,7 +14,6 @@ namespace Game.Player
 
         private Snake _player;
         private Direction _cashedDirection;
-        private Direction _moveDirection;
         private Vector3 _moveDirectionVector;
         private Vector3 _desirePosition;
 
@@ -131,8 +130,7 @@ namespace Game.Player
             
             _player.transform.position = _snakeConfig.StartPosition;
             _desirePosition = _snakeConfig.StartPosition;
-            
-            _moveDirection = _snakeConfig.StartDirection;
+
             _cashedDirection = _snakeConfig.StartDirection;
 
             _playerSpeed = _snakeConfig.MoveDuration;

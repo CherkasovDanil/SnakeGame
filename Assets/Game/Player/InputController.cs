@@ -26,7 +26,7 @@ namespace Game.Player
     
     public class InputController : ITickable
     {
-       private Direction _cashedDirection;
+        private Direction _cashedDirection;
         
         private bool _trackInput = true;
 
@@ -47,12 +47,12 @@ namespace Game.Player
         {
             if (!_trackInput)
             {
-               return;
+                return;
             }
             
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-               _cashedDirection = _cashedDirection switch {
+                _cashedDirection = _cashedDirection switch {
                     Direction.Left => Direction.Down,
                     Direction.Up => Direction.Left,
                     Direction.Right => Direction.Up,
@@ -60,7 +60,7 @@ namespace Game.Player
                     _ => _cashedDirection
                 };
                
-               BlockMovingAndUpdateDirection();
+                BlockMovingAndUpdateDirection();
             }
 
             if (Input.GetKeyDown(KeyCode.RightArrow))

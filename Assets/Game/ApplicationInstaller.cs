@@ -1,4 +1,5 @@
-﻿using Game.Grid;
+﻿using Game.Food;
+using Game.Grid;
 using Game.Player;
 using Zenject;
 
@@ -11,6 +12,8 @@ namespace Game
             GridInstaller.Install(Container);
             
             SnakeInstaller.Install(Container);
+            
+            FoodInstaller.Install(Container);
             
             Container
                 .Bind<ApplicationLauncher>()
