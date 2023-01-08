@@ -8,8 +8,18 @@ namespace Game.Player
         public override void InstallBindings()
         {
             Container
+                .Bind<VectorDirectionController>()
+                .AsSingle()
+                .NonLazy();
+            
+            Container
                 .BindFactory<Snake, Snake.Factory>()
                 .FromComponentInNewPrefabResource("Player");
+            
+            Container
+                .BindFactory<SnakeMovePosition, SnakeBody, SnakeBody.Factory>()
+                .FromComponentInNewPrefabResource("Body")
+                .UnderTransformGroup("BodyParts");;
 
             Container
                 .Bind<SnakeConfig>()
@@ -17,8 +27,13 @@ namespace Game.Player
                 .AsSingle()
                 .NonLazy();
 
-                Container
+            Container
                 .BindInterfacesAndSelfTo<InputController>()
+                .AsSingle()
+                .NonLazy();
+            
+            Container
+                .Bind<SnakeController>()
                 .AsSingle()
                 .NonLazy();
            
@@ -26,6 +41,7 @@ namespace Game.Player
                 .Bind<SnakeMovement>()
                 .AsSingle()
                 .NonLazy();
+
         }
     }
 }

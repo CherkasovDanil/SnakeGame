@@ -65,7 +65,7 @@ namespace Game.Player
 
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                _cashedDirection = _cashedDirection switch
+              _cashedDirection = _cashedDirection switch
                 {
                     Direction.Left => Direction.Up,
                     Direction.Up => Direction.Right,
