@@ -8,16 +8,20 @@ namespace Game.Player
     public class SnakeBody: MonoBehaviour, IDisposable
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
+
+        private const float DurationForScaling = 0.5f;
+        private const int OrderInLayerForSprite = 5;
         
         [Inject]
-        private void Constructor(SnakeMovePosition snakeMovePosition,
+        private void Constructor(
+            SnakeMovePosition snakeMovePosition,
             VectorDirectionController vectorDirectionController)
         {
             transform.position = snakeMovePosition.GetGridPosition();
             transform.eulerAngles = new Vector3(0, 0, vectorDirectionController.GetAngleFromDirection(snakeMovePosition.GetDirection()) - 90);
-            spriteRenderer.sortingOrder = 5;
+            spriteRenderer.sortingOrder = OrderInLayerForSprite;
             
-            transform.DOScale(1, 0.5f);
+            transform.DOScale(1, DurationForScaling);
         }
         
         public void Dispose()

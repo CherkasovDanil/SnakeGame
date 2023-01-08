@@ -39,5 +39,34 @@ namespace Game.Player
                 n += 360;
             return n;
         }
+
+        public float GetAngleForTurnBodyFromSnakeMovePosition(SnakeMovePosition snakeMovePosition)
+        {
+            float angle = snakeMovePosition.GetDirection() 
+                switch
+                {
+                    Direction.Up => snakeMovePosition.GetPreviousDirection() switch
+                    {
+                        Direction.Left => 0 + 45, Direction.Right => 0 - 45, _ => 0
+                    },
+                    Direction.Down => snakeMovePosition.GetPreviousDirection() switch
+                    {
+                        Direction.Left => 180 - 45, Direction.Right => 180 + 45, _ => 180
+                    },
+                    Direction.Left => snakeMovePosition.GetPreviousDirection() switch
+                    {
+                        Direction.Down => 180 - 45, Direction.Up => 45, _ => +90
+                    },
+                    Direction.Right => snakeMovePosition.GetPreviousDirection() switch
+                    {
+                        Direction.Down => 180 + 45, Direction.Up => -45, _ => -90
+                    },
+                    _ => snakeMovePosition.GetPreviousDirection() switch
+                    {
+                        Direction.Left => 0 + 45, Direction.Right => 0 - 45, _ => 0
+                    }
+                };
+            return angle;
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DG.Tweening;
 using Game.Food;
 using Game.Grid;
@@ -25,6 +24,9 @@ namespace Game.Player
         private readonly SnakeConfig _snakeConfig;
         private readonly SnakeController _snakeController;
         private readonly VectorDirectionController _vectorDirectionController;
+
+        private const float DurationForHeadRotation = 0.35f;
+        private const float DurationForBodyPartsRotation = 0.25f;
 
         private Snake _player;
         private Direction _cashedDirection;
@@ -86,8 +88,7 @@ namespace Game.Player
             var snakeMovePosition = new SnakeMovePosition(_previousSnakeMovePosition, _desirePosition, _cashedDirection);
 
             _snakeMovePositionList.Insert(0, snakeMovePosition);
-            
-           
+
             _desirePosition += _vectorDirectionController.GetVectorFromDirection(_cashedDirection);
 
             CheckBorder();
@@ -97,13 +98,15 @@ namespace Game.Player
                 .SetEase(Ease.Linear)
                 .OnComplete(Moving);
             
-            _player.transform.eulerAngles = new Vector3(0, 0, _vectorDirectionController.GetAngleFromDirection(_cashedDirection) - 90);
+            _player.transform.DORotate(
+                new Vector3(0, 0, _vectorDirectionController.GetAngleFromDirection(_cashedDirection) - 90), DurationForHeadRotation)
+                .SetEase(Ease.Linear);
             
             UpdateSnakeBodyPartsPositions();
 
-            if (_snakeMovePositionList.Count > _snakeBodySize)
+            if (_snakeMovePositionList.Count >= _snakeBodySize+1)
             {
-                _snakeMovePositionList.RemoveAt(_snakeMovePositionList.Count-1);
+                _snakeMovePositionList.RemoveAt(_snakeMovePositionList.Count - 1);
             }
 
             MessageBroker
@@ -173,87 +176,47 @@ namespace Game.Player
         {
             for (int i = 0; i < _snakeController.SnakeBodyParts.Count; i++)
             {
-                SetSnakeMovePosition(_snakeMovePositionList[i], _playerSpeed, _snakeController.SnakeBodyParts[i]);
+                SetSnakeMovePosition(_snakeMovePositionList[i], _snakeController.SnakeBodyParts[i]);
             }
         }
         
-        private void SetSnakeMovePosition(SnakeMovePosition snakeMovePosition,float speed, SnakeBody snakeBody) 
+        private void SetSnakeMovePosition(SnakeMovePosition snakeMovePosition, SnakeBody snakeBody) 
         {
-            float angle = snakeMovePosition.GetDirection() 
-                switch
-                {
-                    Direction.Up => snakeMovePosition.GetPreviousDirection() switch
-                    {
-                        Direction.Left => 0 + 45, Direction.Right => 0 - 45, _ => 0
-                    },
-                    Direction.Down => snakeMovePosition.GetPreviousDirection() switch
-                    {
-                        Direction.Left => 180 - 45, Direction.Right => 180 + 45, _ => 180
-                    },
-                    Direction.Left => snakeMovePosition.GetPreviousDirection() switch
-                    {
-                        Direction.Down => 180 - 45, Direction.Up => 45, _ => +90
-                    },
-                    Direction.Right => snakeMovePosition.GetPreviousDirection() switch
-                    {
-                        Direction.Down => 180 + 45, Direction.Up => -45, _ => -90
-                    },
-                    _ => snakeMovePosition.GetPreviousDirection() switch
-                    {
-                        Direction.Left => 0 + 45, Direction.Right => 0 - 45, _ => 0
-                    }
-                };
+            snakeBody.transform.DOKill();
+            
+            var pos = snakeBody.transform.position;
             
             if (snakeMovePosition.GetGridPreviousPosition().x == _gridConfig.Width - 1 && snakeMovePosition.GetGridPosition().x == 1)
             {
-                snakeBody.transform.DOKill();
-               
-                var pos = snakeBody.transform.position;
                 pos.x = 0;
-                snakeBody.transform.position = pos;
             }
 
-            if (snakeMovePosition.GetGridPreviousPosition().y == _gridConfig.Height - 1 && snakeMovePosition.GetGridPosition().y == 1)
+            else if (snakeMovePosition.GetGridPreviousPosition().y == _gridConfig.Height - 1 && snakeMovePosition.GetGridPosition().y == 1)
             {
-                snakeBody.DOKill();
-                    
-                var pos = snakeBody.transform.position;
                 pos.y = 0;
-                snakeBody.transform.position = pos;
             }
             
-            if (snakeMovePosition.GetGridPreviousPosition().x == 0 && snakeMovePosition.GetGridPosition().x == _gridConfig.Width - 2)
+            else if (snakeMovePosition.GetGridPreviousPosition().x == 0 && snakeMovePosition.GetGridPosition().x == _gridConfig.Width - 2)
             {
-                snakeBody.DOKill();
-                    
-                var pos = snakeBody.transform.position;
                 pos.x = _gridConfig.Width-1;
-                snakeBody.transform.position = pos;
             }
             
-            if (snakeMovePosition.GetGridPreviousPosition().y == 0 && snakeMovePosition.GetGridPosition().y == _gridConfig.Height - 2)
+            else if (snakeMovePosition.GetGridPreviousPosition().y == 0 && snakeMovePosition.GetGridPosition().y == _gridConfig.Height - 2)
             {
-                snakeBody.DOKill();
-                    
-                var pos = snakeBody.transform.position;
-                pos.y = _gridConfig.Height-1;;
-                snakeBody.transform.position = pos;
+               pos.y = _gridConfig.Height-1;
             }
+            
+            snakeBody.transform.position = pos;
 
             snakeBody
                 .transform
-                .DOMove(snakeMovePosition.GetGridPosition(), speed)
+                .DOMove(snakeMovePosition.GetGridPosition(), _playerSpeed)
                 .SetEase(Ease.Linear);
-
-            snakeBody.transform.eulerAngles = new Vector3(0, 0, angle);
-        }
-        
-        private float GetAngleFromVector(Vector3 dir)
-        {
-            float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            if (n < 0)
-                n += 360;
-            return n;
+            
+            snakeBody
+                .transform
+                .DORotate( new Vector3(0, 0, _vectorDirectionController.GetAngleForTurnBodyFromSnakeMovePosition(snakeMovePosition)), DurationForBodyPartsRotation)
+                .SetEase(Ease.Linear);
         }
     }
 }

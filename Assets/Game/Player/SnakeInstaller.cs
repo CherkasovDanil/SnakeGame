@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using Zenject;
+﻿using Zenject;
 
 namespace Game.Player
 {
@@ -41,7 +40,6 @@ namespace Game.Player
                 .Bind<SnakeMovement>()
                 .AsSingle()
                 .NonLazy();
-
         }
     }
 }

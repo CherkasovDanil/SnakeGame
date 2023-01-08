@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using Game.Food;
 using UniRx;
-using UnityEngine;
 
 namespace Game.Player
 {
