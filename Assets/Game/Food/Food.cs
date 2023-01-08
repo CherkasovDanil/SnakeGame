@@ -14,29 +14,38 @@ namespace Game.Food
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Collider2D collider2D;
 
-        private IMemoryPool _pool;
+        private const float EffectDuration = 0.8f;
         
+        private IMemoryPool _pool;
+
         private void OnTriggerEnter2D(Collider2D col)
         {
             OnTriggerEvent.Invoke();
         }
-        
 
         public class Pool : MonoMemoryPool<Food>
         {
             protected override void OnSpawned(Food item)
             {
                 item.gameObject.SetActive(true);
-                item.spriteRenderer.DOFade(1f,0.8f).OnComplete(() =>
-                {
-                    item.collider2D.enabled = true;
-                });
+                item.spriteRenderer
+                    .DOFade(1f, EffectDuration)
+                    .OnComplete(() =>
+                    {
+                        item.collider2D.enabled = true;
+                    });
             }
             protected override void OnDespawned(Food item)
-            {
-               item.gameObject.SetActive(false);
-               item.collider2D.enabled = false;
-               item.spriteRenderer.DOFade(0f, 0f);
+            { 
+                item.collider2D.enabled = false;
+                item.spriteRenderer.gameObject.transform
+                    .DOScale(0f, EffectDuration)
+                    .OnComplete(() =>
+                    {
+                        item.gameObject.SetActive(false);
+                        item.spriteRenderer.gameObject.transform.DOScale(1f, 0);
+                        item.spriteRenderer.DOFade(0f, 0f);
+                    });
             }
         }
     }

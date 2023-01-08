@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -29,12 +28,15 @@ namespace Game.Food
         private void DispawnFood()
         {
             var foo = _foods[0];
+            foo.OnTriggerEvent.RemoveListener(DispawnFood);
+            
             _pool.Despawn(foo);
             _foods.Remove(foo);
 
-            SpawnFood();
-            
-            
+            DOVirtual.DelayedCall(1f, () =>
+            {
+                SpawnFood();
+            });
         }
     }
 }
