@@ -23,7 +23,7 @@ namespace Game.Food
             OnTriggerEvent.Invoke();
         }
 
-        public class Pool : MonoMemoryPool<Food>
+        public class Pool : MonoMemoryPool<Vector3, Food>
         {
             protected override void OnSpawned(Food item)
             {
@@ -46,6 +46,11 @@ namespace Game.Food
                         item.spriteRenderer.gameObject.transform.DOScale(1f, 0);
                         item.spriteRenderer.DOFade(0f, 0f);
                     });
+            }
+            
+            protected override void Reinitialize(Vector3 pos, Food item)
+            {
+                item.transform.position = pos;
             }
         }
     }

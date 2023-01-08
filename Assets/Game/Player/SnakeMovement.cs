@@ -32,7 +32,6 @@ namespace Game.Player
         private Direction _cashedDirection;
         private Vector3 _desirePosition;
 
-
         private SnakeMovePosition _previousSnakeMovePosition;
         private List<SnakeMovePosition> _snakeMovePositionList = new List<SnakeMovePosition>();
        
@@ -76,6 +75,16 @@ namespace Game.Player
             
             Moving();
         }
+        
+        public List<Vector3> GetFullSnakeGridPositionList()
+        {
+            var gridPositionList = new List<Vector3>() {_desirePosition};
+            foreach (SnakeMovePosition snakeMovePosition in _snakeMovePositionList)
+            {
+                gridPositionList.Add(snakeMovePosition.GetGridPosition());
+            }
+            return gridPositionList;
+        }
 
 
         private void Moving()
@@ -116,48 +125,38 @@ namespace Game.Player
         
         private void CheckBorder()
         {
+            _player.transform.DOKill();
+            var pos = _player.transform.position;
+            
             if (_desirePosition.x > _gridConfig.Width - 1)
             {
-                _player.transform.DOKill();
-
-                var pos = _player.transform.position;
                 pos.x = 0;
-                _player.transform.position = pos;
-                
+
                 _desirePosition.x = 1;
             }
+            
             if (_desirePosition.y > _gridConfig.Height - 1)
             {
-                _player.transform.DOKill();
-
-                var pos = _player.transform.position;
                 pos.y = 0;
-                _player.transform.position = pos;
-                
+
                 _desirePosition.y = 1;
             }
             
             if (_desirePosition.x < 0)
             {
-                _player.transform.DOKill();
-
-                var pos = _player.transform.position;
                 pos.x = _gridConfig.Width - 1;
-                _player.transform.position = pos;
 
                 _desirePosition.x = _gridConfig.Width - 2;
             }
             
             if (_desirePosition.y < 0)
             {
-                _player.transform.DOKill();
-
-                var pos = _player.transform.position;
                 pos.y = _gridConfig.Height - 1;
-                _player.transform.position = pos;
-                
+               
                 _desirePosition.y = _gridConfig.Height - 2;
             }
+            
+            _player.transform.position = pos;
         }
 
         private void SetPlayerMovementSettings()

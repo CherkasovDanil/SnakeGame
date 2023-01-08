@@ -4,9 +4,9 @@ namespace Game.Player
 {
     public class SnakeMovePosition
     {
-        private SnakeMovePosition _previousSnakeMovePosition;
-        private Vector3 _movePosition;
-        private Direction _direction;
+        private readonly SnakeMovePosition _previousSnakeMovePosition;
+        private readonly Vector3 _movePosition;
+        private readonly Direction _direction;
 
         public SnakeMovePosition(
             SnakeMovePosition previousSnakeMovePosition,

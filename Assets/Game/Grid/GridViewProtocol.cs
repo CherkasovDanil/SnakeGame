@@ -4,14 +4,14 @@ namespace Game.Grid
 {
     public readonly struct GridViewProtocol
     {
-        public readonly bool IsDarkedSprite;
+        public readonly bool IsDarkSprite;
         public readonly Vector3 Position;
 
         public GridViewProtocol(
-            bool isDarkedSprite, 
+            bool isDarkSprite, 
             Vector3 position)
         {
-            IsDarkedSprite = isDarkedSprite;
+            IsDarkSprite = isDarkSprite;
             Position = position;
         }
     }

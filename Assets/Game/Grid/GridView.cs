@@ -7,16 +7,16 @@ namespace Game.Grid
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
 
-        private Color _darkGreen = new Color(0.9f, 0.9f, 0.9f, 1);
-        
+        private static readonly Color DarkGreen = new Color(0.9f, 0.9f, 0.9f, 1);
+
         private int _colorPosition;
 
         [Inject] 
         private void Constructor(GridViewProtocol gridViewProtocol)
         {
-            if (gridViewProtocol.IsDarkedSprite)
+            if (gridViewProtocol.IsDarkSprite)
             {
-                spriteRenderer.color = _darkGreen;
+                spriteRenderer.color = DarkGreen;
             }
 
             transform.position = gridViewProtocol.Position;
