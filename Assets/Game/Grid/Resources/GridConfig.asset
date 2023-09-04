@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c553c7eef7df42abba5d1729a87be015, type: 3}
   m_Name: GridConfig
   m_EditorClassIdentifier: 
-  Width: 17
-  Height: 9
+  Width: 20
+  Height: 11

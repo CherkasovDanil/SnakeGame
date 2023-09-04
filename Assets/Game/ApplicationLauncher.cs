@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using Game.UI.UIService;
+using Zenject;
 
 namespace Game
 {
